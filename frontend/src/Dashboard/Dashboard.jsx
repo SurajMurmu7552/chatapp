@@ -9,7 +9,6 @@ export default function Dashboard() {
     <Container fluid className="h-100 p-0">
       <Row className="m-0 h-100">
         <Col xs={3} className="p-0 " style={{ borderRight: "1px solid #333" }}>
-          {/* <Route path="/dashboard" component={Sidebar} /> */}
           <Sidebar />
         </Col>
         <Col className="p-0 ">

@@ -2,12 +2,56 @@ import React from "react";
 import { Card } from "react-bootstrap";
 
 export default function Messages() {
-  const messages = [
+  const user = {
+    userId: 1,
+    username: "suraj",
+    password: 123,
+  };
+
+  const users = [
     {
-      id: 1,
-      msg: "message1",
+      userId: 1,
+      contacts: [
+        {
+          contactId: 10,
+          contactName: "malinga",
+          messages: [
+            {
+              msgId: 12320,
+              msgBody: "hello",
+            },
+            {
+              msgId: 123200,
+              msgBody: "hello",
+            },
+            {
+              msgId: 1232000,
+              msgBody: "hello",
+            },
+          ],
+        },
+        {
+          contactId: 11,
+          contactName: "Timmy",
+          messages: [
+            {
+              msgId: 122,
+              msgBody: "hello",
+            },
+            {
+              msgId: 132,
+              msgBody: "hello",
+            },
+            {
+              msgId: 232,
+              msgBody: "hello",
+            },
+          ],
+        },
+      ],
     },
   ];
+
 
   return (
     <div>
