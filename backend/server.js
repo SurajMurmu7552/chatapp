@@ -1,35 +1,41 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const { graphqlHTTP } = require("express-graphql");
+const { ApolloServer } = require("apollo-server-express");
+const { createServer } = require("http");
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 
 dotenv.config();
 
 const connect = require("./config/db");
-const schema = require("./Schemas");
 const auth = require("./routes/auth");
+const typeDefs = require("./Schemas/TypeDefs");
+const resolvers = require("./Schemas/Resolvers");
 
-const app = express();
+(async () => {
+  const app = express();
+  const httpServer = createServer(app);
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+  app.use(cors());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-connect();
+  connect();
 
-app.use("/auth", auth);
+  app.use("/auth", auth);
 
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-    graphiql: true,
-  })
-);
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  });
 
-app.listen(4000, console.log("server running on port 4000"));
+  await server.start();
+  server.applyMiddleware({ app });
+
+  httpServer.listen(4000, console.log("server running on port 4000"));
+
+  // await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+  // console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+})();
