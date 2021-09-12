@@ -5,8 +5,6 @@ const resolvers = {
   Query: {
     async getContacts(parent, { userId }) {
       const user = await UserContact.findOne({ userId });
-
-      console.log(user);
       return user.contacts;
     },
     async getMessages(parent, { userId, contactId }) {
