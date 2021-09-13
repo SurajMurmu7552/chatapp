@@ -32,6 +32,7 @@ router.post("/register", async (req, res) => {
 
       const userContact = {
         userId,
+        username,
       };
 
       await UserContact.create(userContact);

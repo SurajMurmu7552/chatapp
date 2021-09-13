@@ -9,6 +9,7 @@ const typeDefs = gql`
   type Message {
     msgId: String
     msgBody: String
+    msgType: String
   }
 
   #Queries
@@ -20,7 +21,7 @@ const typeDefs = gql`
   #Mutations
 
   type Mutation {
-    addContact(userId: String, contactId: String, contactName: String): Contact
+    addContact(userId: String, contactName: String): Contact
     sendMessage(userId: String, contactId: String, msgBody: String): Message
   }
 `;

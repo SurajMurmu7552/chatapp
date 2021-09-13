@@ -8,6 +8,10 @@ const contactSchema = new Schema({
     unique: true,
     required: true,
   },
+  username: {
+    type: String,
+    unique: true,
+  },
   contacts: [
     {
       contactId: {

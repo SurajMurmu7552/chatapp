@@ -1,10 +1,12 @@
 import "./App.css";
-import Auth from "./Auth/Auth";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import Dashboard from "./Dashboard/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+
+import Auth from "./components/Auth/Auth";
+import Dashboard from "./components/Dashboard/Dashboard";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (

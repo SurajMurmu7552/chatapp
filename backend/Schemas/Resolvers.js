@@ -30,18 +30,22 @@ const resolvers = {
   },
 
   Mutation: {
-    async addContact(parent, { userId, contactId, contactName }) {
-      const contact = {
-        contactId,
-        contactName,
-      };
+    async addContact(parent, { userId, contactName }) {
+      const found = await UserContact.findOne({ username: contactName });
 
-      await UserContact.updateOne(
-        { userId },
-        { $push: { contacts: [contact] } }
-      );
+      if (found) {
+        const contact = {
+          contactId: found.userId,
+          contactName,
+        };
 
-      return contact;
+        await UserContact.updateOne(
+          { userId },
+          { $push: { contacts: [contact] } }
+        );
+
+        return contact;
+      }
     },
     async sendMessage(parent, { userId, contactId, msgBody }) {
       const msgId = uuidv4();

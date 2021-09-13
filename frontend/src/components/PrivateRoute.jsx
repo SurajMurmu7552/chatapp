@@ -6,7 +6,7 @@ export default function PrivateRoute({ component: Componenet, ...rest }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (!user) {
-    return <Spinner animation="border" />;
+    <Spinner animation="border" />;
   }
 
   return (
