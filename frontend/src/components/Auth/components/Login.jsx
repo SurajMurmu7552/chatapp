@@ -25,13 +25,11 @@ export default function Login({ handleLink }) {
 
     setUser({ username: "", password: "" });
 
-    if (server.status === 200) {
-      setRes({ msg: response.msg, err: response.err });
-      localStorage.setItem("user", JSON.stringify(response.data));
+    setRes({ msg: response.msg, err: response.err });
+    localStorage.setItem("user", JSON.stringify(response.data));
 
-      if (response.success) {
-        history.push("/dashboard");
-      }
+    if (response.success) {
+      history.push("/dashboard");
     }
   };
 

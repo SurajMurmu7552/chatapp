@@ -26,7 +26,7 @@ export default function Sidebar() {
   const handleAddContact = (e) => {
     e.preventDefault();
 
-    if (contactName !== "" && contactName !== user.userId) {
+    if (contactName !== "" && contactName !== user.username) {
       addContact({
         variables: {
           addContactUserId: user.userId,
@@ -51,12 +51,13 @@ export default function Sidebar() {
             <Navbar.Brand>
               <img
                 alt=""
-                src="/user.png"
+                src="/user.svg"
                 width="30"
                 height="30"
                 className="d-inline-block align-top"
+                style={{ background: "#fff", borderRadius: "50%" }}
               />{" "}
-              Username
+              {user.username}
             </Navbar.Brand>
             <Nav className="mq-auto">
               <NavDropdown title="" id="collasible-nav-dropdown">
@@ -78,6 +79,7 @@ export default function Sidebar() {
                 placeholder="Username"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
+                value={contactName}
                 onChange={(e) => {
                   e.preventDefault();
                   setContactName(e.target.value);

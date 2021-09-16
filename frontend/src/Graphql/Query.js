@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_CONTACTS = gql`
-  query Query($getContactsUserId: String) {
+  subscription Subscription($getContactsUserId: String) {
     getContacts(userId: $getContactsUserId) {
       contactId
       contactName
@@ -10,7 +10,10 @@ export const GET_CONTACTS = gql`
 `;
 
 export const GET_MESSAGES = gql`
-  query Query($getMessagesUserId: String, $getMessagesContactId: String) {
+  subscription Subscription(
+    $getMessagesUserId: String
+    $getMessagesContactId: String
+  ) {
     getMessages(userId: $getMessagesUserId, contactId: $getMessagesContactId) {
       msgId
       msgBody

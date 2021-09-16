@@ -24,6 +24,7 @@ const contactSchema = new Schema({
         {
           msgId: {
             type: String,
+            unique: true,
           },
           msgBody: {
             type: String,

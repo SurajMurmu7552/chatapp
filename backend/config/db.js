@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-// const uri = process.env.DB_URI;
-
-const uri = "mongodb://localhost:27017/chatapp";
+const uri = process.env.DB_URI;
 
 console.log(uri);
 

@@ -24,6 +24,12 @@ const typeDefs = gql`
     addContact(userId: String, contactName: String): Contact
     sendMessage(userId: String, contactId: String, msgBody: String): Message
   }
+
+  #Subscription
+  type Subscription {
+    getContacts(userId: String): [Contact]
+    getMessages(userId: String, contactId: String): [Message]
+  }
 `;
 
 module.exports = typeDefs;

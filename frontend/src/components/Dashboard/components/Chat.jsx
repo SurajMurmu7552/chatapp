@@ -1,15 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
-import {
-  Container,
-  Nav,
-  Navbar,
-  NavDropdown,
-  Row,
-  Button,
-  Form,
-  Col,
-} from "react-bootstrap";
+import { Container, Navbar, Row, Button, Form, Col } from "react-bootstrap";
 import { SEND_MESSAGE } from "../../../Graphql/Mutation";
 import Messages from "./utils/Messages";
 
@@ -45,18 +36,14 @@ export default function Chat() {
             <Navbar.Brand>
               <img
                 alt=""
-                src="/user.png"
+                src="/user.svg"
                 width="30"
                 height="30"
                 className="d-inline-block align-top"
+                style={{ background: "#fff", borderRadius: "50%" }}
               />{" "}
-              Sent to
+              {contact.contactName}
             </Navbar.Brand>
-            <Nav className="mq-auto">
-              <NavDropdown title="" id="collasible-nav-dropdown">
-                <NavDropdown.Item> Log out</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
           </Container>
         </Navbar>
       </Row>
