@@ -1,12 +1,13 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Container, Navbar, Row, Button, Form, Col } from "react-bootstrap";
 import { SEND_MESSAGE } from "../../../Graphql/Mutation";
 import Messages from "./utils/Messages";
 
 export default function Chat() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const contact = JSON.parse(localStorage.getItem("contact"));
+  const contact = useSelector((state) => state.contact);
 
   const [message, setMessage] = useState("");
 

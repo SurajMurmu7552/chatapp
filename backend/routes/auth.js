@@ -11,11 +11,13 @@ router.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const find = User.find({ username });
+    const userSearch = await User.findOne({ username });
 
-    if (find.username) {
+    if (userSearch) {
       res.status(200).json({
         err: "unique username required",
+        msg: null,
+        success: false,
       });
     } else {
       const salt = await bcrypt.genSalt(saltRounds);
@@ -41,11 +43,15 @@ router.post("/register", async (req, res) => {
 
       if (user) {
         res.status(200).json({
+          err: null,
           msg: "user created",
+          success: true,
         });
       } else {
         res.status(400).json({
-          err: "error",
+          err: "error during register",
+          msg: null,
+          success: false,
         });
       }
     }
@@ -58,30 +64,29 @@ router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const findUser = await User.findOne({ username });
 
-    if (!user) {
-      res.status(200).json({
-        err: "wrong credentials",
-      });
-    }
+    if (findUser) {
+      const comparePassword = await bcrypt.compare(password, findUser.password);
 
-    const compare = await bcrypt.compare(password, user.password);
+      if (comparePassword) {
+        const user = {
+          userId: findUser.userId,
+          username: findUser.username,
+        };
 
-    if (compare) {
-      const data = {
-        userId: user.userId,
-        username: user.username,
-      };
-
-      res.status(200).json({
-        data,
-        msg: "welcome user",
-        success: true,
-      });
+        res.status(200).json({
+          user,
+          success: true,
+        });
+      } else {
+        res.status(200).json({
+          success: false,
+        });
+      }
     } else {
       res.status(200).json({
-        err: "wrong credentials",
+        success: false,
       });
     }
   } catch (err) {

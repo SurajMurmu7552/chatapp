@@ -7,7 +7,6 @@ const { execute, subscribe } = require("graphql");
 const { SubscriptionServer } = require("subscriptions-transport-ws");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { ApolloServer } = require("apollo-server-express");
-const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 
 dotenv.config();
 

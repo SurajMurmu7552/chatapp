@@ -10,14 +10,16 @@ import {
   InputGroup,
   FormControl,
 } from "react-bootstrap";
-import { useHistory } from "react-router";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { ADD_CONTACT } from "../../../Graphql/Mutation";
+import { removeContact } from "../../../Redux/contactSlice";
 import Contacts from "./utils/Contacts";
 
 export default function Sidebar() {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const history = useHistory();
+  const dispatch = useDispatch();
 
   const [contactName, setContactName] = useState("");
 
@@ -40,8 +42,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("contactId");
-    history.push("/");
+    dispatch(removeContact());
   };
   return (
     <>
@@ -63,7 +64,7 @@ export default function Sidebar() {
               <NavDropdown title="" id="collasible-nav-dropdown">
                 <NavDropdown.Item onClick={handleLogout}>
                   {" "}
-                  Log out
+                  <Link to="/login">Log out</Link>
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>

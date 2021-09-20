@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import { useSubscription } from "@apollo/client";
 
 import { GET_CONTACTS } from "../../../../Graphql/Query";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../../../Redux/contactSlice";
 
 export default function Contacts() {
+  const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
 
   const { loading, error, data } = useSubscription(GET_CONTACTS, {
@@ -13,9 +16,6 @@ export default function Contacts() {
       getContactsUserId: user.userId,
     },
   });
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return ` ${error}`;
 
   const handleContactId = (e) => {
     const contactId = e.target.parentElement.parentElement.id;
@@ -27,8 +27,12 @@ export default function Contacts() {
       contactName,
     };
 
-    localStorage.setItem("contact", JSON.stringify(contact));
+    // localStorage.setItem("contact", JSON.stringify(contact));
+    dispatch(addContact(contact));
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return ` ${error}`;
 
   if (data) {
     return (
