@@ -17,10 +17,6 @@ export default function Registration() {
 
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // if (registerState.status === "success" && registerState.success) {
-  //   return <Redirect to="/login" />;
-  // }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -37,6 +33,10 @@ export default function Registration() {
 
   if (localStorage.getItem("user")) {
     return <Redirect to="/dashboard" />;
+  }
+
+  if (registerState.status === "success" && registerState.success) {
+    return <Redirect to="/login" />;
   }
 
   return (

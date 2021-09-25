@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { useHistory } from "react-router";
 import { Form, Button, Alert, Spinner, Container, Row } from "react-bootstrap";
 import { getLogin } from "../../Redux/loginSlice";
 import { Link } from "react-router-dom";
 
 export default function Login() {
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const loginState = useSelector((state) => state.login);
@@ -23,14 +21,7 @@ export default function Login() {
     dispatch(getLogin(user));
 
     setUser({ username: "", password: "" });
-    history.push("/dashboard");
-
-    // localStorage.setItem("user", JSON.stringify(response.data));
   };
-
-  // if (loginState.status === "success" && loginState.success) {
-  //   history.push("/dashboard");
-  // }
 
   if (localStorage.getItem("user")) {
     return <Redirect to="/dashboard" />;

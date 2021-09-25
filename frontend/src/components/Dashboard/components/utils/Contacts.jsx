@@ -27,7 +27,6 @@ export default function Contacts() {
       contactName,
     };
 
-    // localStorage.setItem("contact", JSON.stringify(contact));
     dispatch(addContact(contact));
   };
 

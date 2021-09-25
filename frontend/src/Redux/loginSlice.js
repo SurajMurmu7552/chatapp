@@ -21,7 +21,9 @@ const loginSlice = createSlice({
       state.status = "loading";
     },
     [getLogin.fulfilled]: (state, { payload }) => {
-      localStorage.setItem("user", JSON.stringify(payload.user));
+      if (payload.success) {
+        localStorage.setItem("user", JSON.stringify(payload.user));
+      }
       state.user = payload.user;
       state.success = payload.success;
       state.status = "success";

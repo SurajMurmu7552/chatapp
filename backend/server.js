@@ -60,7 +60,9 @@ const resolvers = require("./Schemas/Resolvers");
   await server.start();
   server.applyMiddleware({ app });
 
-  httpServer.listen(4000, console.log("server running on port 4000"));
+  const PORT = process.env.PORT || 4000;
+
+  httpServer.listen(PORT, console.log("server running on port 4000"));
 
   // await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
   // console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);

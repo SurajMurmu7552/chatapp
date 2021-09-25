@@ -11,7 +11,6 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 import { ADD_CONTACT } from "../../../Graphql/Mutation";
 import { removeContact } from "../../../Redux/contactSlice";
 import Contacts from "./utils/Contacts";
@@ -44,6 +43,7 @@ export default function Sidebar() {
     localStorage.removeItem("user");
     dispatch(removeContact());
   };
+
   return (
     <>
       <Row className=" m-0">
@@ -62,9 +62,12 @@ export default function Sidebar() {
             </Navbar.Brand>
             <Nav className="mq-auto">
               <NavDropdown title="" id="collasible-nav-dropdown">
-                <NavDropdown.Item onClick={handleLogout}>
-                  {" "}
-                  <Link to="/login">Log out</Link>
+                <NavDropdown.Item
+                  href="/login"
+                  className="mx-auto"
+                  onClick={handleLogout}
+                >
+                  Log out
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
