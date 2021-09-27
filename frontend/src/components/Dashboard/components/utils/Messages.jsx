@@ -16,6 +16,7 @@ export default function Messages() {
       getMessagesUserId: user.userId,
       getMessagesContactId: contact.contactId,
     },
+    shouldResubscribe: true,
   });
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function Messages() {
   if (loading) return <div ref={end}>Loading ...</div>;
   if (error) return <div ref={end}>{error}</div>;
 
-  if (data) {
+  if (data.getMessages.length > 0) {
     return (
       <div id="endOfDiv">
         {data ? (
@@ -63,5 +64,11 @@ export default function Messages() {
       </div>
     );
   }
-  return <div></div>;
+  return (
+    <div ref={end}>
+      <Alert variant="light" className="mt-3">
+        <p>Chat is empty....</p>
+      </Alert>
+    </div>
+  );
 }

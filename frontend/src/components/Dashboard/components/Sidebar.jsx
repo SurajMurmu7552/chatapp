@@ -4,7 +4,6 @@ import {
   Container,
   Nav,
   Navbar,
-  NavDropdown,
   Row,
   Form,
   InputGroup,
@@ -46,7 +45,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <Row className=" m-0">
+      <Row className=" m-0 p-0">
         <Navbar bg="dark" variant="dark">
           <Container fluid>
             <Navbar.Brand>
@@ -60,21 +59,15 @@ export default function Sidebar() {
               />{" "}
               {user.username}
             </Navbar.Brand>
-            <Nav className="mq-auto">
-              <NavDropdown title="" id="collasible-nav-dropdown">
-                <NavDropdown.Item
-                  href="/login"
-                  className="mx-auto"
-                  onClick={handleLogout}
-                >
-                  Log out
-                </NavDropdown.Item>
-              </NavDropdown>
+            <Nav>
+              <Nav.Link href="/login" onClick={handleLogout}>
+                Log out
+              </Nav.Link>
             </Nav>
           </Container>
         </Navbar>
       </Row>
-      <Row className="m-0  ">
+      <Row className="m-0">
         <Container fluid className="p-2">
           <Form onSubmit={handleAddContact}>
             <InputGroup className=" ">

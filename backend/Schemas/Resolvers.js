@@ -12,104 +12,124 @@ const onContactsUpdates = (fn) => contactSubscribers.push(fn);
 const resolvers = {
   Query: {
     async getContacts(parent, { userId }) {
-      const user = await UserContact.findOne({ userId });
-      return user.contacts;
+      try {
+        const user = await UserContact.findOne({ userId });
+        if (user) {
+          return user.contacts;
+        }
+      } catch (err) {
+        console.log(err);
+      }
     },
     async getMessages(parent, { userId, contactId }) {
-      const data = await UserContact.findOne(
-        {
-          userId,
-        },
-        {
-          contact: {
-            $filter: {
-              input: "$contacts",
-              as: "contact",
-              cond: { $eq: ["$$contact.contactId", contactId] },
-            },
+      try {
+        const data = await UserContact.findOne(
+          {
+            userId,
           },
+          {
+            contact: {
+              $filter: {
+                input: "$contacts",
+                as: "contact",
+                cond: { $eq: ["$$contact.contactId", contactId] },
+              },
+            },
+          }
+        ).lean();
+
+        if (data) {
+          const contact = await data.contact;
+
+          return contact[0].messages;
         }
-      ).lean();
-
-      const contact = await data.contact;
-
-      return contact[0].messages;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 
   Mutation: {
     async addContact(parent, { userId, contactName }) {
-      let contact = {};
+      try {
+        let contact = {};
 
-      const alreadyExist = await UserContact.findOne(
-        { userId },
-        {
-          contact: {
-            $filter: {
-              input: "$contacts",
-              as: "contact",
-              cond: { $eq: ["$$contact.contactName", contactName] },
+        const alreadyExist = await UserContact.findOne(
+          { userId },
+          {
+            contact: {
+              $filter: {
+                input: "$contacts",
+                as: "contact",
+                cond: { $eq: ["$$contact.contactName", contactName] },
+              },
             },
-          },
-        }
-      ).lean();
+          }
+        ).lean();
 
-      if (!alreadyExist.contact[0]) {
-        const found = await UserContact.findOne({ username: contactName });
-        if (found) {
-          contact = {
-            contactId: found.userId,
-            contactName,
-          };
+        if (!alreadyExist.contact[0]) {
+          const found = await UserContact.findOne({ username: contactName });
+          if (found) {
+            contact = {
+              contactId: found.userId,
+              contactName,
+            };
 
-          await UserContact.updateOne(
-            { userId },
-            { $push: { contacts: [contact] } }
-          );
+            await UserContact.updateOne(
+              { userId },
+              { $push: { contacts: [contact] } }
+            );
+          }
         }
+        contactSubscribers.forEach((fn) => fn());
+        return contact;
+      } catch (err) {
+        console.log(err);
       }
-      contactSubscribers.forEach((fn) => fn());
-      return contact;
     },
     async sendMessage(parent, { userId, contactId, msgBody }) {
-      const msgId = uuidv4();
-      const sentMessage = {
-        msgId,
-        msgBody,
-        msgType: "sent",
-      };
+      try {
+        const msgId = uuidv4();
+        const sentMessage = {
+          msgId,
+          msgBody,
+          msgType: "sent",
+        };
 
-      const recieveMessage = {
-        msgId,
-        msgBody,
-        msgType: "recieve",
-      };
+        const recieveMessage = {
+          msgId,
+          msgBody,
+          msgType: "recieve",
+        };
 
-      await UserContact.updateMany(
-        {
-          userId,
-        },
-        {
-          $push: { "contacts.$[element].messages": sentMessage },
-        },
-        {
-          arrayFilters: [{ "element.contactId": contactId }],
-        }
-      );
-      await UserContact.updateMany(
-        {
-          userId: contactId,
-        },
-        {
-          $push: { "contacts.$[element].messages": recieveMessage },
-        },
-        {
-          arrayFilters: [{ "element.contactId": userId }],
-        }
-      );
+        await UserContact.updateMany(
+          {
+            userId,
+          },
+          {
+            $push: { "contacts.$[element].messages": sentMessage },
+          },
+          {
+            arrayFilters: [{ "element.contactId": contactId }],
+          }
+        );
+        await UserContact.updateMany(
+          {
+            userId: contactId,
+          },
+          {
+            $push: { "contacts.$[element].messages": recieveMessage },
+          },
+          {
+            arrayFilters: [{ "element.contactId": userId }],
+          }
+        );
 
-      messageSubscribers.forEach((fn) => fn());
-      return recieveMessage;
+        messageSubscribers.forEach((fn) => fn());
+        return recieveMessage;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 
@@ -119,15 +139,29 @@ const resolvers = {
         const channel = Math.random().toString(36).slice(2, 15);
 
         onContactsUpdates(async () => {
-          const user = await UserContact.findOne({ userId });
-          const contacts = await user.contacts;
+          try {
+            const user = await UserContact.findOne({ userId });
 
-          await pubsub.publish(channel, { getContacts: contacts });
+            if (user) {
+              const contacts = await user.contacts;
+
+              await pubsub.publish(channel, { getContacts: contacts });
+            }
+          } catch (err) {
+            console.log(err);
+          }
         });
         setTimeout(async () => {
-          const user = await UserContact.findOne({ userId });
-          const contacts = await user.contacts;
-          await pubsub.publish(channel, { getContacts: contacts });
+          try {
+            const user = await UserContact.findOne({ userId });
+
+            if (user) {
+              const contacts = await user.contacts;
+              await pubsub.publish(channel, { getContacts: contacts });
+            }
+          } catch (err) {
+            console.log(err);
+          }
         }, 0);
         return pubsub.asyncIterator(channel);
       },
@@ -136,46 +170,57 @@ const resolvers = {
       subscribe: (parent, { userId, contactId }) => {
         const channel = Math.random().toString(36).slice(2, 15);
         onMessagesUpdates(async () => {
-          const data = await UserContact.findOne(
-            {
-              userId,
-            },
-            {
-              contact: {
-                $filter: {
-                  input: "$contacts",
-                  as: "contact",
-                  cond: { $eq: ["$$contact.contactId", contactId] },
-                },
+          try {
+            const data = await UserContact.findOne(
+              {
+                userId,
               },
+              {
+                contact: {
+                  $filter: {
+                    input: "$contacts",
+                    as: "contact",
+                    cond: { $eq: ["$$contact.contactId", contactId] },
+                  },
+                },
+              }
+            ).lean();
+
+            const contact = await data.contact;
+            if (data.contact.length > 0) {
+              const messages = await contact[0].messages;
+              await pubsub.publish(channel, { getMessages: messages });
             }
-          ).lean();
-
-          const contact = await data.contact;
-          const messages = await contact[0].messages;
-
-          await pubsub.publish(channel, { getMessages: messages });
+          } catch (err) {
+            console.log(err);
+          }
         });
         setTimeout(async () => {
-          const data = await UserContact.findOne(
-            {
-              userId,
-            },
-            {
-              contact: {
-                $filter: {
-                  input: "$contacts",
-                  as: "contact",
-                  cond: { $eq: ["$$contact.contactId", contactId] },
-                },
+          try {
+            const data = await UserContact.findOne(
+              {
+                userId,
               },
+              {
+                contact: {
+                  $filter: {
+                    input: "$contacts",
+                    as: "contact",
+                    cond: { $eq: ["$$contact.contactId", contactId] },
+                  },
+                },
+              }
+            ).lean();
+
+            const contact = await data.contact;
+
+            if (data.contact.length > 0) {
+              const messages = await contact[0].messages;
+              await pubsub.publish(channel, { getMessages: messages });
             }
-          ).lean();
-
-          const contact = await data.contact;
-          const messages = await contact[0].messages;
-
-          await pubsub.publish(channel, { getMessages: messages });
+          } catch (err) {
+            console.log(err);
+          }
         }, 0);
 
         return pubsub.asyncIterator(channel);

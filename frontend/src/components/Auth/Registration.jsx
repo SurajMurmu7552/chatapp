@@ -35,9 +35,9 @@ export default function Registration() {
     return <Redirect to="/dashboard" />;
   }
 
-  if (registerState.status === "success" && registerState.success) {
-    return <Redirect to="/login" />;
-  }
+  // if (registerState.status === "success" && registerState.success) {
+  //   return <Redirect to="/login" />;
+  // }
 
   return (
     <Container fluid={true} className="h-100 ">
@@ -51,7 +51,7 @@ export default function Registration() {
             <Alert variant="danger">{registerState.err}. Try again</Alert>
           ) : null}
           {registerState.msg ? (
-            <Alert variant="success">{registerState.msg}.</Alert>
+            <Alert variant="success">{registerState.msg}.Try Logging in</Alert>
           ) : null}
           <Form.Group className="mb-3" controlId="formBasicUsername">
             <Form.Control

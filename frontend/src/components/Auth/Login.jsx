@@ -31,7 +31,7 @@ export default function Login() {
     <Container fluid={true} className="h-100 ">
       <Row
         lg={3}
-        className="justify-content-md-center align-content-md-center h-100"
+        className="justify-content-md-center align-items-md-center h-100"
       >
         <Form onSubmit={handleSubmit}>
           <h3 className="mb-3">Login</h3>

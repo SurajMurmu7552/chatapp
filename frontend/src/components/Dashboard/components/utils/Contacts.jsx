@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Alert, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSubscription } from "@apollo/client";
 
@@ -15,6 +15,7 @@ export default function Contacts() {
     variables: {
       getContactsUserId: user.userId,
     },
+    shouldResubscribe: true,
   });
 
   const handleContactId = (e) => {
@@ -33,7 +34,9 @@ export default function Contacts() {
   if (loading) return <div>Loading...</div>;
   if (error) return ` ${error}`;
 
-  if (data) {
+  console.log(data.getContacts.length);
+
+  if (data.getContacts.length > 0) {
     return (
       <div>
         {data.getContacts.map(({ contactId, contactName }) => (
@@ -51,5 +54,11 @@ export default function Contacts() {
     );
   }
 
-  return <div></div>;
+  return (
+    <div>
+      <Alert variant="light">
+        <p>Both Users should have added each other with unique username</p>
+      </Alert>
+    </div>
+  );
 }

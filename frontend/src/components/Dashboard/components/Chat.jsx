@@ -1,15 +1,26 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Navbar, Row, Button, Form, Col } from "react-bootstrap";
+import {
+  Container,
+  Navbar,
+  Row,
+  Button,
+  Form,
+  Col,
+  Nav,
+} from "react-bootstrap";
 import { SEND_MESSAGE } from "../../../Graphql/Mutation";
 import Messages from "./utils/Messages";
 
-export default function Chat() {
+export default function Chat({ height }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const contact = useSelector((state) => state.contact);
 
   const [message, setMessage] = useState("");
+
+  console.log("height: %d", height);
 
   const [sendMessage] = useMutation(SEND_MESSAGE);
 
@@ -31,7 +42,7 @@ export default function Chat() {
 
   return (
     <>
-      <Row className=" m-0" lg={1} md={1}>
+      <Row className=" m-0 p-0" lg={1} md={1}>
         <Navbar bg="dark" variant="dark">
           <Container fluid>
             <Navbar.Brand>
@@ -45,13 +56,26 @@ export default function Chat() {
               />{" "}
               {contact.contactName}
             </Navbar.Brand>
+
+            <Nav>
+              <Link
+                to="/dashboard"
+                style={{ color: "#fff", textDecoration: "none" }}
+              >
+                Contacts
+              </Link>
+            </Nav>
           </Container>
         </Navbar>
       </Row>
-      <Row className="m-0" lg={1} md={1}>
+      <Row className="m-0 p-0" lg={1} md={1}>
         <Container
           fluid
-          style={{ overflowY: "scroll", overflowX: "hidden", height: "600px" }}
+          style={{
+            overflowY: "scroll",
+            overflowX: "hidden",
+            height: "83vh",
+          }}
         >
           <Messages />
         </Container>
